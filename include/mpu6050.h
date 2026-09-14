@@ -39,7 +39,7 @@ typedef struct {
 } mpu6050_cfg_t;
 
 typedef enum {
-    MPU6050_INIT_SUCCESSFULL = 0,
+    MPU6050_INIT_SUCCESSFULL = 1,
     MPU6050_INIT_FAILURE,
     MPU6050_SENSOR_DATA_READ_FAILURE,
     MPU6050_SENSOR_DATA_READ_SUCCESSFULL
@@ -97,7 +97,7 @@ mpu6050_status_t mpu6050_init (const mpu6050_cfg_t *config);
  */
 mpu6050_status_t mpu6050_read_sensor_data (const mpu6050_cfg_t *config, mpu6050_raw_t *data);
 
-void MPU6050_ReadScaled (mpu6050_raw_t *raw_data, processed_gyro_accel_data_t *processed_data);
+void MPU6050_ReadScaled (const mpu6050_raw_t *raw_data, processed_gyro_accel_data_t *processed_data);
 
 void mpu6050_compute_fused_angles(fused_angle_t *fused_angle, processed_gyro_accel_data_t *processed_data, float dt_sec);
 

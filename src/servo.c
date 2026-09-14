@@ -1,8 +1,5 @@
 #include <avr/io.h>
 #include "servo.h"
-#include "uart.h"
-#include <stdlib.h>
-#include "servo.h"
 
 #define ONE_MS 2000.0f
 
@@ -26,8 +23,8 @@ void SERVO_INIT (void) {
     OCR1B = 2999; // Compare Match B exactly 1.5ms (90 degrees) by default
     TCNT1 = 0; // Timer register set to 0 
 
-    DDRB |= (1<<DDB1); // OC1A (Servo1/Roll) pin set to O/P
-    DDRB |= (1<<DDB2); // OC1B (Servo2/Pitch) pin set to O/P
+    DDRB |= (1<<DDB1); // OC1A (Servo1) pin set to O/P
+    DDRB |= (1<<DDB2); // OC1B (Servo2) pin set to O/P
 
 }
 

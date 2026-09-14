@@ -7,7 +7,7 @@ typedef enum {
 }servo_id_t;
 
 typedef enum {
-    SUCCESS_SERVO = 17,
+    SUCCESS_SERVO = 18,
     ERR_INVALID_SERVO_ID
 }servo_status_t;
 

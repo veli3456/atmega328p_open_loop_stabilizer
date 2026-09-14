@@ -24,9 +24,9 @@ void fatal_error_trap(uint8_t err_code, const char* file, uint16_t line) {
         // Blink LED err_code times (3 blinks = Code 3)
         for (uint8_t i = 0; i < err_code; i++) {
             PORTB |= (1<<PB0);
-            _delay_ms(700);
+            _delay_ms(300);
             PORTB &= ~(1<<PB0);
-            _delay_ms(700);
+            _delay_ms(300);
         }
         _delay_ms(1500); // Pause between blink patterns
     }

@@ -92,7 +92,7 @@ mpu6050_status_t mpu6050_read_sensor_data (const mpu6050_cfg_t *config, mpu6050_
     return MPU6050_SENSOR_DATA_READ_SUCCESSFULL;
 }
 
-void MPU6050_ReadScaled (mpu6050_raw_t *raw_data, processed_gyro_accel_data_t *processed_data) {
+void MPU6050_ReadScaled (const mpu6050_raw_t *raw_data, processed_gyro_accel_data_t *processed_data) {
     processed_data->accel_x = ((float)raw_data->accel_x / 16384.0f) + MPU6050_ACCEL_X_OFFSET; // accel data between -2.0 and 2.0g
     processed_data->accel_y = ((float)raw_data->accel_y / 16384.0f) + MPU6050_ACCEL_Y_OFFSET;
     processed_data->accel_z = ((float)raw_data->accel_z / 16384.0f) + MPU6050_ACCEL_Z_OFFSET;

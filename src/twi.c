@@ -1,9 +1,7 @@
 #include <avr/io.h>
 #include <stdint.h>
 #include <stddef.h>
-#include <stdbool.h>
 #include "twi.h"
-#include "uart.h"
 
 // Bitrate Register Range
 #define MAX 255
