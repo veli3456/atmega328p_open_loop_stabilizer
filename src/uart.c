@@ -14,3 +14,32 @@ void uart_send_str (const char *str) {
     }
 }
 
+void uart_send_hex8 (uint8_t val) {
+    static const char hex_digits[] = "0123456789ABCDEF";
+
+    while (!(UCSR0A & (1 << UDRE0)));
+    UDR0 = hex_digits[(val >> 4) & 0x0F]; // Send high nibble
+
+    while (!(UCSR0A & (1 << UDRE0)));
+    UDR0 = hex_digits[val & 0x0F];        // Send low nibble
+}
+
+void uart_send_dec16 (uint16_t val) {
+    static const char base_10[] = "0123456789";
+    char str[6] = {0};
+
+    str [0] = base_10[val % 10]; // Let's say 65532, 2 is assigned here
+    val /= 10; // 6553
+    str [1] = base_10[val % 10]; // We get the 3
+    val /= 10; // 655
+    str [2] = base_10[val % 10]; // We get the 5
+    val /= 10; // 65
+    str [3] = base_10[val % 10]; // We get the 5 
+    val /= 10; // 6 
+    str [4] = base_10[val % 10]; // We get the 6 
+
+    for (int8_t i = 4; i >= 0; i--) { // int8_t ensures it doesn't overflow to 255 like unsigned numbers when it gets less than 0.
+        while ( !(UCSR0A & (1<<UDRE0)) ); // If UDRE0 == 1, buffer is empty
+        UDR0 = str[i];
+    }
+}
