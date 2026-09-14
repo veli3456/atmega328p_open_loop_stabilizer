@@ -13,7 +13,9 @@
 
 int main (void) {
 
-    mpu6050_status_t status;
+    mpu6050_status_t status_mpu6050 = 0;
+    twi_result_t status_twi = 0;
+    servo_status_t status_servo = 0;
 
     uint32_t prev_time = 0;
 
@@ -21,11 +23,13 @@ int main (void) {
     processed_gyro_accel_data_t processed_data = {0};
     fused_angle_t fused_angle = {0};
 
-    if (TWI_INIT(NULL) == TWI_ERROR_INVALID_PARAM) {
-        FATAL_ERROR(TWI_ERROR_INVALID_PARAM);
+    status_twi = TWI_INIT(NULL);
+    if (status_twi != TWI_INIT_SUCCESSFULL) {
+        FATAL_ERROR(status_twi);
     }
-    if (mpu6050_init(NULL) == MPU6050_INIT_FAILURE) {
-        FATAL_ERROR(MPU6050_INIT_FAILURE);
+    status_mpu6050 = mpu6050_init(NULL);
+    if (status_mpu6050 != MPU6050_INIT_SUCCESSFULL) {
+        FATAL_ERROR(status_mpu6050);
     }
 
     timer0_init();
@@ -35,13 +39,26 @@ int main (void) {
 
         if (ELAPSED_TIME(prev_time) > SAMPLING_PERIOD_MS) {
 
-            status = mpu6050_read_sensor_data(NULL, &raw_data);
+            status_mpu6050 = mpu6050_read_sensor_data(NULL, &raw_data);
 
-            if (status == MPU6050_SENSOR_DATA_READ_SUCCESSFULL) { // sensor data read fail
+            if (status_mpu6050 == MPU6050_SENSOR_DATA_READ_SUCCESSFULL) { // sensor data read fail
+
                 MPU6050_ReadScaled(&raw_data, &processed_data);
                 mpu6050_compute_fused_angles(&fused_angle, &processed_data, DELTA_T);
-                servo_change_angle((servo_angle_t*)&fused_angle); // converts angles into milliseconds and assign them to OCR1x to change duty cycle
+
+                status_servo = servo_change_angle(fused_angle.fused_roll, SERVO_1); // converts angles into milliseconds and assign them to OCR1x to change duty cycle
+
+                if (status_servo != SUCCESS_SERVO) {
+                    FATAL_ERROR(status_servo);
+                }
+
+                status_servo = servo_change_angle(fused_angle.fused_pitch, SERVO_2);
+
+                if (status_servo != SUCCESS_SERVO) {
+                    FATAL_ERROR(status_servo);
+                }
             }
+
             prev_time = get_time();
         }   
     }

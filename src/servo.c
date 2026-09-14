@@ -2,12 +2,12 @@
 #include "servo.h"
 #include "uart.h"
 #include <stdlib.h>
+#include "servo.h"
 
 #define ONE_MS 2000.0f
 
 #define LOWEST_SERVO_ANGLE -90.0f
 #define HIGHEST_SERVO_ANGLE 90.0f
-
 
 // Produces a 50 hz (20ms period) PWM signal for two servos 
 void SERVO_INIT (void) {
@@ -31,28 +31,27 @@ void SERVO_INIT (void) {
 
 }
 
-void servo_change_angle (servo_angle_t *servo_angle) {
+servo_status_t servo_change_angle (float servo_angle, servo_id_t servo_num) {
 
-
-    if (servo_angle->pitch > HIGHEST_SERVO_ANGLE) {
-        servo_angle->pitch = HIGHEST_SERVO_ANGLE;
+    if (servo_angle > HIGHEST_SERVO_ANGLE) { // If the servo angle goes beyond +90
+        servo_angle = HIGHEST_SERVO_ANGLE;
     }
-    if (servo_angle->pitch < LOWEST_SERVO_ANGLE) { // If the servo pitch drops below 0 degrees
-        servo_angle->pitch = LOWEST_SERVO_ANGLE;
-    }
-
-    if (servo_angle->roll > HIGHEST_SERVO_ANGLE) {
-        servo_angle->roll = HIGHEST_SERVO_ANGLE;
-    }
-    if (servo_angle->roll < LOWEST_SERVO_ANGLE) {
-        servo_angle->roll = LOWEST_SERVO_ANGLE;
+    if (servo_angle < LOWEST_SERVO_ANGLE) { // If the angle goes below -90
+        servo_angle = LOWEST_SERVO_ANGLE;
     }
 
     // Converts angle between 0-180 to a number between 1 to 2ms
-    float servo_roll_ms = (2 * (servo_angle->roll / 180.0f)) + 1.5f; // Servo 1 PWM signal
-    float servo_pitch_ms = (2 * (servo_angle->pitch / 180.0f)) + 1.5f; // Servo 2 PWM signal
+    float servo_angle_ms = (2 * (servo_angle / 180.0f)) + 1.5f; // Servo 1 PWM signal
 
-    OCR1A = servo_roll_ms * ONE_MS - 1; // between 1999-3999 corresponding to 1-2ms
-    OCR1B = servo_pitch_ms * ONE_MS - 1; // between 1999-3999 corresponding to 1-2ms
+    if (servo_num  == SERVO_1) {
+        OCR1A = servo_angle_ms * ONE_MS - 1; // between 1999-3999 corresponding to 1-2ms
+    }
+    else if (servo_num == SERVO_2) {
+        OCR1B = servo_angle_ms * ONE_MS - 1; // between 1999-3999 corresponding to 1-2ms
+    }
+    else {
+        return ERR_INVALID_SERVO_ID;
+    }
 
+    return SUCCESS_SERVO;
 }
