@@ -1,0 +1,4 @@
+echo "build/" >> .gitignore
+echo "*.o" >> .gitignore
+echo "*.elf" >> .gitignore
+echo "*.hex" >> .gitignore
