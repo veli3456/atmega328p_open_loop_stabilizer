@@ -23,7 +23,7 @@ void servo_angle_change(const fused_angle_t *fused_angle);
 typedef enum {
     SENSOR_READ,
     DATA_PROCESS,
-    SERVO_ANGLE_CHANGE
+    UPDATE_SERVO
 }state_t;
 
 state_t state;
@@ -43,7 +43,7 @@ int main (void) {
         case DATA_PROCESS:
             process_data(&raw_data, &fused_angle, &processed_data);
             break;
-        case SERVO_ANGLE_CHANGE:
+        case UPDATE_SERVO:
             servo_angle_change(&fused_angle);
             break;
         }
@@ -54,7 +54,7 @@ int main (void) {
 
 void system_init (void) {
 
-    uart_init(); // required for error handling, might move to the error module, need to be at top because program can enter the error loop
+    uart_init(); // necessary for error_handler module
     timer0_init();
     SERVO_INIT();
 
@@ -92,7 +92,7 @@ void process_data (const mpu6050_raw_t *raw_data, fused_angle_t *fused_angle, pr
     MPU6050_ReadScaled(raw_data, processed_data);
     mpu6050_compute_fused_angles(fused_angle, processed_data, DELTA_T);
 
-    state = SERVO_ANGLE_CHANGE;
+    state = UPDATE_SERVO;
 }
 
 void servo_angle_change(const fused_angle_t *fused_angle) {

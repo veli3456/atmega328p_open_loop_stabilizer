@@ -4,10 +4,13 @@
 
 volatile uint32_t time_var;
 
+#define TIMER_FREQ 250000UL
+#define TIMER0_OCR_1MS ((uint8_t)((TIMER_FREQ / 1000UL) - 1))
+
 void timer0_init (void) {
     TCCR0A = (1<<WGM01); // CTC
     TCCR0B = (1<<CS00) | (1<<CS01); // Prescaler 64, timer freq = 250kHz
-    OCR0A = 249; // 1ms
+    OCR0A = TIMER0_OCR_1MS; // 1ms
     TIMSK0 = (1<<OCIE0A); // Timer0 compare match a interrupt enable
     sei(); // global interrupt enable
 }

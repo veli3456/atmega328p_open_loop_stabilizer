@@ -4,8 +4,8 @@
 #include "twi.h"
 
 // Bitrate Register Range
-#define MAX 255
-#define MIN 10
+#define MAX 255UL
+#define MIN 10UL
 
 typedef enum {
     TWI_STATUS_START = 0x08, // START condition transmitted

@@ -9,7 +9,7 @@ void fatal_error_trap(uint8_t err_code, const char* file, uint16_t line) {
     cli(); // Disable interfering background tasks
 
     // MCU-to-PC Diagnostic Output
-    uart_send_str("\r\n[FATAL ERROR 0x");
+    uart_send_str("\r\n[FATAL ERROR 0x"); 
     uart_send_hex8(err_code);
     uart_send_str("] File: ");
     uart_send_str(file);
