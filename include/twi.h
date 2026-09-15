@@ -5,7 +5,7 @@
 
 // 1. Public Data Types
 typedef enum { // enums are better than macros
-    TWI_INIT_SUCCESSFULL = 0,
+    TWI_INIT_SUCCESSFULL = 5,
     TWI_ERROR_INVALID_PARAM,
     TWI_ERROR_START_FAILED,
     TWI_SUCCESSFULL,

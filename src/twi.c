@@ -1,13 +1,11 @@
 #include <avr/io.h>
 #include <stdint.h>
 #include <stddef.h>
-#include <stdbool.h>
 #include "twi.h"
-#include "uart.h"
 
 // Bitrate Register Range
-#define MAX 255
-#define MIN 10
+#define MAX 255UL
+#define MIN 10UL
 
 typedef enum {
     TWI_STATUS_START = 0x08, // START condition transmitted
