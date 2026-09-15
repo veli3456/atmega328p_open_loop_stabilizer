@@ -2,6 +2,7 @@
 #include <avr/io.h>
 #include <twi.h>
 #include <stddef.h>
+#include "fast_math.h"
 #include <math.h>
 
 // -------------------------------------------------------------
@@ -30,6 +31,7 @@ typedef enum {
     ACCEL_XOUT = 0x3B
 } mpu6050_registers_t;
 
+float atan2f_fast(float y, float x);
 
 mpu6050_status_t mpu6050_init (const mpu6050_cfg_t *config) {
     if (config == NULL) {
@@ -106,10 +108,10 @@ void mpu6050_compute_fused_angles(fused_angle_t *fused_angle, processed_gyro_acc
     // square root of the sum of squared y and and squared z produces an angle output range of -90 degrees to 90 degrees.
     // Just accel z as the second parameter to atan2 outputs a range between -180 degrees to 180 degrees
     // Compute accel radian for x
-    float roll_rad = atan2f(processed_data->accel_x, processed_data->accel_z);
+    float roll_rad = atan2f_fast(processed_data->accel_x, processed_data->accel_z); // 100us
 
     // Compute accel radian for y
-    float pitch_rad = atan2f (processed_data->accel_y, processed_data->accel_z);
+    float pitch_rad = atan2f_fast(processed_data->accel_y, processed_data->accel_z);
 
     float roll_deg = roll_rad * (180.0f / (float)M_PI);
     float pitch_deg = pitch_rad * (180.0f / (float)M_PI);
@@ -123,3 +125,5 @@ void mpu6050_compute_fused_angles(fused_angle_t *fused_angle, processed_gyro_acc
     prev_fused_roll = fused_angle->fused_roll;
     prev_fused_pitch = fused_angle->fused_pitch;
 }
+
+
