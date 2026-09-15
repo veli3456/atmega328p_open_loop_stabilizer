@@ -39,7 +39,7 @@ twi_result_t TWI_INIT (const twi_config_t *cfg) {
     }
 
     // Bitrate check (TWBR register range: 10 - 255)
-    if (cfg->bit_rate >= MIN && cfg->bit_rate <= MAX) {
+    if (cfg->bit_rate >= MIN) { // No need for a ceiling because bit_rate is uint8_t meaning it is impossible to exceed 255 even when it overflows
         TWBR = cfg->bit_rate;
     }
     else {
